@@ -18,11 +18,11 @@ const registerUser = asynchandler( async (req , res) => {
 
 
    
-    const { fullName , email , username , password } = req.body
+    const { fullname , email , username , password } = req.body
     console.log("email :" , email);
     
     if (
-        [fullName , email , password , username ].some((field) => 
+        [fullname , email , password , username ].some((field) => 
         field.trim() === "")
     ) {
         throw new ApiError(400 , "all feilds are required ")
@@ -52,7 +52,7 @@ const registerUser = asynchandler( async (req , res) => {
     }
 
     const user = await User.create({
-        fullName,
+        fullname,
         avatar: avatar.url,
         coverImage: coverImage?.url || "" ,
         email, 
