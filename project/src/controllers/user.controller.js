@@ -4,6 +4,7 @@ import { User } from "../models/user.model.js" ;
 import { uploadOnCloudinary } from "../utils/cloudinary.js" ;
 import { ApiResponse } from "../utils/Apiresponse.js" ;
 import jwt from "jsonwebtoken"
+import mongoose from "mongoose";
 
 
 
@@ -155,8 +156,8 @@ const logoutUser = asynchandler( async ( req , res) => {
     User.findByIdAndUpdate(
         req.user._id ,
         {
-            $set: {
-                refreshToken: undefined
+            $unset: {
+                refreshToken: 1 //this removes the feild from document 
             } 
         },
             {
@@ -173,7 +174,7 @@ const logoutUser = asynchandler( async ( req , res) => {
     return res.status(200)
     .clearCookie("accessToken" , options)
     .clearCookie("refreshToken"  , options)
-    .json(new ApiResponse(200 , {} , "User loggeg out successfully"))
+    .json(new ApiResponse(200 , {} , "User logged out successfully"))
 
 })
 
@@ -432,4 +433,14 @@ const getWatchHistory = asynchandler(async(req , res) => {
 })
 
 
-export {registerUser , loginUser , logoutUser , refreshAccessToken , changeCurrentPassword , getCurrentUser , updateAccountDetails , updateUserAvatar , updateUserCoverImage , getUserChannelProfile , getWatchHistory}
+export {registerUser ,
+    loginUser ,
+    logoutUser ,
+    refreshAccessToken ,
+    changeCurrentPassword ,
+    getCurrentUser ,
+    updateAccountDetails ,
+    updateUserAvatar ,
+    updateUserCoverImage ,
+    getUserChannelProfile ,
+    getWatchHistory}
