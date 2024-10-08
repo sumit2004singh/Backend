@@ -133,6 +133,8 @@ const loginUser = asynchandler(async ( req , res ) => {
 
     const loggedInUser = await User.findById(user._id).select("-password -refreshToken")
 
+
+
     const options = {
         httpOnly: true , 
         secure: true 
@@ -153,7 +155,7 @@ const loginUser = asynchandler(async ( req , res ) => {
 })
 
 const logoutUser = asynchandler( async ( req , res) => {
-    User.findByIdAndUpdate(
+    await User.findByIdAndUpdate(
         req.user._id ,
         {
             $unset: {
@@ -247,7 +249,7 @@ const getCurrentUser = asynchandler(async(req , res) => {
 
 const updateAccountDetails = asynchandler(async(req , res) => {
     const {fullname , email} = req.body
-    if(!fullname && !email) {
+    if(!fullname || !email) {
         throw new ApiError(400 , "fullname or email is required")
     }
 
@@ -295,7 +297,7 @@ const updateUserCoverImage = asynchandler(async(req , res) => {
         throw new ApiError(400 , "coverImage is required")
     }
 
-    const coverImage = awaituploadOnCloudinary(coverImageLocalPath)
+    const coverImage = await uploadOnCloudinary(coverImageLocalPath)
 
     if(!coverImage) {
         throw new ApiError(400 , "coverImage is required")
@@ -357,7 +359,8 @@ const getUserChannelProfile = asynchandler(async(req , res) => {
                     } 
                 }
             }
-        } ,{
+        } ,
+        {
             $project:{
                 fullname:1 ,
                 username:1 ,
