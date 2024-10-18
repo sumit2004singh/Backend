@@ -196,7 +196,7 @@ const getUserTweets = asynchandler(async (req , res) => {
     .json(new ApiResponse(200 , allTweets , "All Tweets fetched successfully"))
 });
 
-    const updateTweet = asyncHandler(async (req, res) => {
+const updateTweet = asyncHandler(async (req, res) => {
         const { tweetId } = req.params;
         const { tweet } = req.body;
         if (!isValidObjectId(tweetId)) throw new ApiError(400, "Invalid tweetId");
@@ -218,7 +218,7 @@ const getUserTweets = asynchandler(async (req , res) => {
           .json(new ApiResponse(200, updatedTweet, "tweet updated successfully"));
       });
 
-      const deleteTweet = asyncHandler(async (req, res) => {
+const deleteTweet = asyncHandler(async (req, res) => {
         const { tweetId } = req.params;
 
         if (!isValidObjectId(tweetId)) throw new ApiError(400, "Invalid tweetId");
