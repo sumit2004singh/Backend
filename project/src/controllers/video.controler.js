@@ -106,7 +106,7 @@ const getAllVideos = asyncHandler(async (req ,res) => {
     
 });
 
-const getUserVideos = asyncHandler(async (req , rse) => {
+const getUserVideos = asyncHandler(async (req , res) => {
     const { page = 1 , limit = 10 , sortType = "desc"} = req.query;
     const { userId } = req.params;
 
@@ -161,7 +161,7 @@ const getUserVideos = asyncHandler(async (req , rse) => {
             }
         },
         {
-            $$project: {
+            $project: {
                 _id: 1,
                 owner: 1,
                 videoFile: 1,
@@ -190,7 +190,7 @@ const getSubscribedVideos = asyncHandler(async (req , res) => {
     const { userId } = req.params;
 
     const subscriptions = await Subscription.find({
-        subscriber: new mongoose.Types.ObjectId(req.user._id),
+        subscriber: new mongoose.Types.ObjectId(req.user?._id),
     }).select("channel");
 
     const channelIds = subscriptions.map((sub) => sub.channel);
@@ -291,7 +291,7 @@ const publishAVideo = asyncHandler(async (req ,res ) => {
         throw new ApiError(500 , "Something went wrong while uploading video");
     }
 
-    const vedio = await Video.create({
+    const video = await Video.create({
         videoFile: videoFile.secure_url ,
         thumbnail: thumbnail.secure_url ,
         title: title ,
@@ -299,7 +299,7 @@ const publishAVideo = asyncHandler(async (req ,res ) => {
         owner: req.user._id,
     })
 
-    if(!Video) {
+    if(!video) {
         throw new ApiError(500 , "Something went wrong while publishing video");
     }
 
@@ -414,7 +414,7 @@ const getVideoById = asyncHandler(async ( req , res) => {
         throw new ApiError(404 , "Video not found");
     }
 
-    await video.findByIdAndUpdate(videoId , {
+    await Video.findByIdAndUpdate(videoId , {
         $inc: {
             views: 1,
         }
