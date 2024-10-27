@@ -132,7 +132,7 @@ const getSubscribedChannels = asyncHandler(async (req , res) => {
         },
         {
             $addFields: {
-                "channelDetails.subscribersCount": {
+                "channelDetails.isSubscribed": {
                     $cond: {
                         if: {
                             $in: [new mongoose.Types.ObjectId(req.user?._id) , "$channelSubscribers.subscriber"]
